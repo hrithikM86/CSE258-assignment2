@@ -22,6 +22,8 @@ def run(data, output, split):
             item_users[i].add(row["user"])
         for a, b in zip(ids, ids[1:]):
             transitions[a][b] += 1
+    catalog = sorted(counts)
+    popularity_order = sorted(catalog, key=lambda i: (-counts[i], i))
     summaries = {}
     for model in ("popularity", "item_cf", "markov"):
         started = time.perf_counter()
@@ -29,7 +31,7 @@ def run(data, output, split):
         for row in rows:
             context = row["train"] + ([row["validation"]] if split == "test" else [])
             seen = {e["item"] for e in context}
-            scores = dict(counts) if model == "popularity" else {i: 0.0 for i in counts}
+            scores = defaultdict(float)
             if model == "markov":
                 last = context[-1]["item"]
                 total = sum(transitions[last].values())
@@ -45,9 +47,25 @@ def run(data, output, split):
                         union = len(item_users[a]) + len(item_users[b]) - overlap
                         scores[b] += overlap / union if union else 0.0
             target = row[split]["item"]
+            if model == "popularity":
+                ranked = []
+                for i in popularity_order:
+                    if i not in seen:
+                        ranked.append(i)
+                        if len(ranked) == 10:
+                            break
+            else:
+                ranked = rank_items(scores, seen)
+                # Unscored catalog items have score zero; break those ties by ID.
+                if len(ranked) < 10:
+                    for i in catalog:
+                        if i not in seen and i not in scores:
+                            ranked.append(i)
+                            if len(ranked) == 10:
+                                break
             results.append({"user": row["user"], "target": target,
                             "frequency_bin": frequency_bin(counts[target]),
-                            **metrics(rank_items(scores, seen), target)})
+                            **metrics(ranked, target)})
         summary = {key: sum(r[key] for r in results)/len(results)
                    for key in ("ndcg@10", "recall@10")}
         summary["by_frequency"] = {}
