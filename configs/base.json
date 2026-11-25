@@ -1,0 +1,29 @@
+{
+  "dataset": "amazon_beauty_2014_5core",
+  "contract": "v1",
+  "seed": 42,
+  "final_seeds": [
+    42,
+    43,
+    44
+  ],
+  "hidden_dim": 64,
+  "num_blocks": 2,
+  "max_length": 50,
+  "batch_size": 64,
+  "num_negatives": 32,
+  "max_epochs": 100,
+  "patience": 10,
+  "selection_metric": "ndcg@10",
+  "evaluation": "full_catalog",
+  "features": {
+    "text": false,
+    "historical_rating": false,
+    "historical_time_gap": false
+  },
+  "sampler": {
+    "kind": "uniform",
+    "uniform_fraction": 1.0
+  },
+  "status": "provisional_before_pilot"
+}
