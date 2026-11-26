@@ -26,7 +26,7 @@ The archive contains the raw downloads under `data/raw/` and the shared split an
 | Task | Owner |
 |---|---|
 | SASRec baseline | Vanshik |
-| gSASRec baseline with uniform negative sampling | Hrithik |
+| gSASRec | Hrithik |
 | gSASRec with product text and historical numerical features | Hrithik |
 | gSASRec with adaptive semantic negative sampling | Vanshik |
 
