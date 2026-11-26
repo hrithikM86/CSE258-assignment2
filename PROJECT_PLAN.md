@@ -34,3 +34,27 @@ Coordinate the shared trainer, evaluator, and relevant course baselines. The fea
 - [Amazon Beauty data](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html)
 - [SASRec](https://arxiv.org/abs/1808.09781)
 - [gSASRec](https://arxiv.org/abs/2308.07192)
+
+## Results from seed 42
+
+Hrithik ran these experiments locally on Mac. Training used a maximum of 50 epochs and early stopping after five epochs without better validation NDCG@10. The best validation checkpoint was evaluated on test. Evaluation ranks the full catalog and filters previously observed products. Test inputs include the validation interaction and its historical rating when applicable.
+
+### All 22,363 users
+
+| Model | Best epoch | Validation Recall@10 | Validation NDCG@10 | Test Recall@10 | Test NDCG@10 |
+|---|---:|---:|---:|---:|---:|
+| gSASRec | 15 | 0.016769 | 0.008701 | 0.011626 | 0.006171 |
+| gSASRec + text | 17 | 0.017037 | 0.008330 | 0.012118 | 0.005911 |
+| gSASRec + text + ratings | 17 | 0.018692 | 0.008792 | 0.013862 | 0.006455 |
+
+### 8,003 users without ties at either split boundary
+
+| Model | Validation Recall@10 | Validation NDCG@10 | Test Recall@10 | Test NDCG@10 |
+|---|---:|---:|---:|---:|
+| gSASRec | 0.010621 | 0.005132 | 0.008747 | 0.003943 |
+| gSASRec + text | 0.011121 | 0.005424 | 0.009871 | 0.004608 |
+| gSASRec + text + ratings | 0.011496 | 0.005574 | 0.010121 | 0.004737 |
+
+The feature models add projected, frozen product text vectors to history inputs. The rating version also adds trainable embeddings for historical star ratings. Text plus ratings improved all-user test Recall@10 by 19.2% and NDCG@10 by 4.6% relative to gSASRec. Text alone improved recall but reduced all-user NDCG. These are single-seed results, and consistency across seeds remains to be measured.
+
+The implementation uses an adapted PyTorch Transformer backbone with uniform negative sampling and gBCE. SASRec and adaptive semantic sampling results from Vanshik are pending. Next, integrate those experiments with the shared evaluator and run additional seeds using fixed settings.
