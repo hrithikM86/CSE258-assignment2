@@ -56,3 +56,12 @@ class GSASRec(nn.Module):
         """Score candidate IDs at each sequence position."""
         candidates = self.output_embeddings(candidate_ids)
         return torch.einsum("bth,btkh->btk", states, candidates)
+
+
+def build_model(model_config, text_embeddings_path=None):
+    if text_embeddings_path is None:
+        return GSASRec(**model_config)
+
+    from gsasrec_text.model import TextGSASRec
+
+    return TextGSASRec(embeddings_path=text_embeddings_path, **model_config)
