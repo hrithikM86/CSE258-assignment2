@@ -34,7 +34,7 @@ Both teammates use the same split, candidate catalog, and evaluator. See [PROJEC
 
 ## Results from seed 42
 
-Hrithik ran these experiments locally on Mac. Training used a maximum of 50 epochs and early stopping after five epochs without better validation NDCG@10. The best validation checkpoint was evaluated on test. Evaluation ranks the full catalog and filters previously observed products. Test inputs include the validation interaction and its historical rating when applicable.
+These experiments ran locally on Mac. Training used a maximum of 50 epochs and early stopping after five epochs without better validation NDCG@10. The best validation checkpoint was evaluated on test. Evaluation ranks the full catalog and filters previously observed products. Test inputs include the validation interaction and its historical rating when applicable.
 
 ### All 22,363 users
 
