@@ -6,8 +6,8 @@ Test whether product text and historical numerical features or adaptive semantic
 
 | Task | Owner | Scope |
 |---|---|---|
-| SASRec | Vanshik | Establish the sequential recommendation baseline. |
-| gSASRec | Hrithik | Use uniform negative sampling and generalized binary cross-entropy (gBCE). Share the gSASRec backbone with both extensions. |
+| [SASRec](https://arxiv.org/abs/1808.09781) | Vanshik | Establish the sequential recommendation baseline. |
+| [gSASRec](https://arxiv.org/abs/2308.07192) | Hrithik | Use uniform negative sampling and generalized binary cross-entropy (gBCE). Share the gSASRec backbone with both extensions. |
 | gSASRec + product features | Hrithik | Fuse catalog text embeddings and numerical features derived from the user's available history, starting with historical ratings. |
 | gSASRec + adaptive semantic sampling | Vanshik | Use the shared embeddings to identify similar candidates. Keep a uniform component and introduce semantic or model-score negatives while holding the negative budget fixed. |
 
