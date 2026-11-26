@@ -1,89 +1,64 @@
-# Project definition and two-person ownership
+# Project plan
 
-## Scope and hypothesis
+## Goal
 
-Predict the next reviewed product using the preceding review-event sequence.
-These events are not a complete purchase history. Investigate whether product text
-and historical feedback improve representations, whether adaptive semantic
-negatives improve training, and whether the two changes complement one another.
-Improvement and research novelty are hypotheses, not promised outcomes.
+Test whether product text, historical numerical features, and adaptive semantic
+negative sampling improve next-item ranking over gSASRec. Improvement and novelty
+are not established results.
 
-Primary metric: full-catalog NDCG@10. Secondary: Recall@10. Additional analysis:
-training time, peak memory where measurable, parameter count, and performance by
-training-item frequency. Do not compare our full-catalog numbers directly with
-SASRec's sampled-candidate published scores.
+## Dataset
 
-## Ownership
+Amazon Beauty 2014 five-core reviews plus product metadata. Predict the next
+reviewed product, rather than claiming to observe all purchases.
 
-Person A (provisionally M5): gSASRec + features.
-- Own src/features.py, src/models/features.py, text cache, metadata audit, and EDA.
-- Encode title/description/brand/categories once with a small frozen encoder.
-- Implement IDs + text, IDs + historical rating, and both; time gaps optional.
-- Start with projected additive fusion, then compare a small learned gate.
-- Implement BPR matrix factorization as a course baseline.
-- Explain feature availability, missingness, examples, and parameter behavior.
+## Shared data protocol (to implement together)
 
-Person B (provisionally M2 Pro): gSASRec + adaptive sampling.
-- Own src/sampling.py, sampling diagnostics, and sampler configurations.
-- Implement uniform, semantic-only, score-based, and mixed samplers.
-- Use cached text neighbors from A; an ID-only model can still use text in its
-  training sampler, so explicitly report this information advantage.
-- Build semi-hard candidate pools; do not deterministically choose only hardest.
-- Warm up with uniform sampling, then increase the nonuniform mixture gradually.
-- Own simple baseline execution and optionally FPMC after the required baselines.
-- Keep negative budget constant; record realized mixture and duplicate rates.
+Both people use the full identical processed dataset, never separate halves.
+Generate the split once, share the saved files and ID mappings, and verify hashes.
+For each user, train on all but the last two events, validate on the second-last,
+and test on the last. Resolve timestamp ties deterministically and document the
+ambiguity. Fit preprocessing statistics using training data; never expose target
+ratings/reviews to the model or use held-out outcomes for negative sampling.
 
-Shared / coordinator-owned:
-- src/prepare.py, src/evaluation.py, DATA_CONTRACT.md: freeze together before runs.
-- Original SASRec/gSASRec port, trainer, checkpoint format: B leads; A reviews
-  interface before feature work. First verify baseline parity, masking and loss.
-- Combined variant: integrate only after both independent variants pass checks.
-- Final notebook, related work, presentation, result interpretation: both.
+## Responsibilities
 
-Device assignments can swap based on measured free memory and pilot throughput;
-chip names alone do not establish which device is faster for this workload.
-Use branches codex/features and codex/adaptive-sampling; shared foundation changes
-must be coordinated rather than independently rewritten.
+Person A (M5): metadata audit and exploratory analysis; cached frozen product-text
+embeddings; historical rating features; feature fusion and ablations; BPR baseline.
+Time gaps are optional, price is deferred until suitability is checked.
 
-## Milestones and acceptance checks
+Person B (M2 Pro): uniform and adaptive semantic/model-score samplers; sampling
+ablations; popularity, item-CF and Markov baselines. Coordinate the common gSASRec
+trainer with Person A before building either extension.
 
-1. Foundation: download, preprocess, audit, validate hashes, run simple baselines.
-   Verify deterministic splits, no held-out labels in train counts, and metrics.
-2. Baseline: port gSASRec and reproduce its loss mathematically; smoke-test one
-   batch on CPU and MPS, then establish a validation score and checkpoint parity.
-3. Parallel extensions: A features; B sampling. Verify both use the frozen
-   manifest and the original uniform sampler remains available unchanged.
-4. Integration: run controlled ablations; choose configurations on validation.
-5. Final experiment: rerun every selected model on ONE device, pinned environment,
-   seeds [42,43,44], same data/config hashes. Open the test set only after freeze.
-6. Deliverables: executed notebook and workbook.html; roughly 20-minute video;
-   video_url.txt; later peer-grading responses.txt. Follow assignment instructions.
+gSASRec calibration assumes uniform negative sampling. Nonuniform variants using
+unchanged gBCE must be labeled heuristic unless a valid correction is derived.
+Semantically similar unobserved products are not guaranteed true negatives.
 
-## Mac resource budget (initial settings, subject to pilot)
+Both: shared evaluator, integration, related work, result interpretation, notebook
+and recorded presentation.
 
-Two transformer blocks, d=64, max sequence length=50, batch=64; reduce batch if
-needed on both final comparisons. Small frozen text encoder, cached embeddings,
-no language-model fine-tuning. Score catalogs in chunks. Do not construct dense
-all-item-by-all-item similarity matrices. Semantic neighbors: top 50 per item,
-built in chunks. Persist data on disk; process gzip records as streams.
+## Evaluation
 
-MPS is optional: CPU fallback is valid. Seeds do not guarantee identical results
-across hardware/backends. Preliminary cross-device timings are not comparable.
-Use the chosen final device for all reported timing and accuracy comparisons.
+Same saved splits, catalog, filtering, and evaluator for every model. Primary:
+full-catalog NDCG@10; secondary: Recall@10. Report frequency-based analysis,
+parameter counts, and computational cost. Select configurations on validation.
+After freezing experiments, rerun selected models on one device with a pinned
+environment and shared seed list, then evaluate test. Cross-device development
+results and timings are preliminary.
 
-## Research caution for nonuniform negatives
+## Steps
 
-gSASRec's calibration derivation assumes uniform sampling. A semantic/adaptive
-sampler with unchanged gBCE is a heuristic variant, not a calibrated guarantee.
-First test that variant explicitly. A corrected variant requires deriving and
-checking sampling-probability weights under the actual replacement/exclusion
-scheme; do not add an ad hoc correction and claim theoretical validity.
-False negatives cannot be identified perfectly from similarity. Diagnose rather
-than claiming they have been eliminated. Never use held-out interactions to mine
-or exclude training negatives.
+1. Verify the local environment.
+2. Inspect raw reviews and metadata together.
+3. Implement preprocessing, audit, and shared train/validation/test files.
+4. Implement course baselines and verify SASRec/gSASRec.
+5. Develop features and sampling independently; run validation ablations.
+6. Integrate extensions and perform final single-device comparisons.
+7. Produce workbook.html, approximately 20-minute presentation, video_url.txt,
+   and the later peer-grading submission according to the assignment statement.
 
-## Presentation outline (20 minutes)
+## References
 
-Task and related work 3 min; data/EDA 3; baselines and gSASRec 3;
-features 3; sampling 3; shared evaluation/results/limitations 5.
-Both members explain their code, hypotheses and unsuccessful experiments.
+- Data: https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html
+- SASRec: https://arxiv.org/abs/1808.09781
+- gSASRec: https://arxiv.org/abs/2308.07192
