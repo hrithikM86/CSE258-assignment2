@@ -1,64 +1,36 @@
 # Project plan
 
-## Goal
+Test whether product text and historical numerical features or adaptive semantic negative sampling improve next-item ranking over gSASRec on Amazon Beauty 2014 5-core. The target is the next reviewed product.
 
-Test whether product text, historical numerical features, and adaptive semantic
-negative sampling improve next-item ranking over gSASRec. Improvement and novelty
-are not established results.
+## Four implementation tasks
 
-## Dataset
+| Task | Owner | Scope |
+|---|---|---|
+| SASRec | Vanshik | Establish the sequential recommendation baseline. |
+| gSASRec | Hrithik | Use uniform negative sampling and generalized binary cross-entropy (gBCE). Share the gSASRec backbone with both extensions. |
+| gSASRec + product features | Hrithik | Fuse catalog text embeddings and numerical features derived from the user's available history, starting with historical ratings. |
+| gSASRec + adaptive semantic sampling | Vanshik | Use the shared embeddings to identify similar candidates. Keep a uniform component and introduce semantic or model-score negatives while holding the negative budget fixed. |
 
-Amazon Beauty 2014 five-core reviews plus product metadata. Predict the next
-reviewed product, rather than claiming to observe all purchases.
+Coordinate the shared trainer, evaluator, and relevant course baselines. The feature and sampling extensions are separate experiments.
 
-## Shared data protocol (to implement together)
+## Data and evaluation
 
-Both people use the full identical processed dataset, never separate halves.
-Generate the split once, share the saved files and ID mappings, and verify hashes.
-For each user, train on all but the last two events, validate on the second-last,
-and test on the last. Resolve timestamp ties deterministically and document the
-ambiguity. Fit preprocessing statistics using training data; never expose target
-ratings/reviews to the model or use held-out outcomes for negative sampling.
+- Use the shared split, ID mappings, and embeddings described in [README.md](README.md). Validation uses training history. Test uses training history plus the validation interaction.
+- Use the same full catalog and observed-item filtering across models. Report NDCG@10 as the primary metric and Recall@10 as the secondary metric. Select configurations and checkpoints on validation before evaluating test.
+- Report results for all eligible users and a secondary result for the 8,003 users with no ties at either split boundary. Ties affect 14,360 users at one or both boundaries. Raw-file order gives a reproducible split. The true order of those tied reviews is unknown.
+- Retain targets whose products never appeared in training and report their counts alongside the main results. The current split has 51 such validation targets and 138 test targets.
+- Fit feature statistics using training data and derive history features only from interactions available at prediction time. Use training information to select negatives. The original gBCE calibration assumes uniform sampling, so using unchanged gBCE with adaptive sampling is a heuristic.
+- Develop on separate Macs and rerun selected experiments on one device with shared seeds. Compare accuracy by training item frequency and report parameter counts and runtime.
 
-## Responsibilities
+## Order of work
 
-Person A (M5): metadata audit and exploratory analysis; cached frozen product-text
-embeddings; historical rating features; feature fusion and ablations; BPR baseline.
-Time gaps are optional, price is deferred until suitability is checked.
-
-Person B (M2 Pro): uniform and adaptive semantic/model-score samplers; sampling
-ablations; popularity, item-CF and Markov baselines. Coordinate the common gSASRec
-trainer with Person A before building either extension.
-
-gSASRec calibration assumes uniform negative sampling. Nonuniform variants using
-unchanged gBCE must be labeled heuristic unless a valid correction is derived.
-Semantically similar unobserved products are not guaranteed true negatives.
-
-Both: shared evaluator, integration, related work, result interpretation, notebook
-and recorded presentation.
-
-## Evaluation
-
-Same saved splits, catalog, filtering, and evaluator for every model. Primary:
-full-catalog NDCG@10; secondary: Recall@10. Report frequency-based analysis,
-parameter counts, and computational cost. Select configurations on validation.
-After freezing experiments, rerun selected models on one device with a pinned
-environment and shared seed list, then evaluate test. Cross-device development
-results and timings are preliminary.
-
-## Steps
-
-1. Verify the local environment.
-2. Inspect raw reviews and metadata together.
-3. Implement preprocessing, audit, and shared train/validation/test files.
-4. Implement course baselines and verify SASRec/gSASRec.
-5. Develop features and sampling independently; run validation ablations.
-6. Integrate extensions and perform final single-device comparisons.
-7. Produce workbook.html, approximately 20-minute presentation, video_url.txt,
-   and the later peer-grading submission according to the assignment statement.
+1. Verify the shared dataset and build the evaluator. Use popularity as a sanity check.
+2. Implement SASRec and gSASRec, then add the feature and sampling extensions.
+3. Compare models and ablations on validation. Freeze settings, rerun selected models, and evaluate on test.
+4. Prepare the workbook and presentation.
 
 ## References
 
-- Data: https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html
-- SASRec: https://arxiv.org/abs/1808.09781
-- gSASRec: https://arxiv.org/abs/2308.07192
+- [Amazon Beauty data](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html)
+- [SASRec](https://arxiv.org/abs/1808.09781)
+- [gSASRec](https://arxiv.org/abs/2308.07192)
