@@ -1,0 +1,88 @@
+{
+  "model": "sasrec",
+  "seed": 42,
+  "device": "cpu",
+  "smoke_run": false,
+  "selected_epoch": 78,
+  "stopped_epoch": 98,
+  "parameter_count": 633600,
+  "elapsed_seconds": 521.6082801670127,
+  "model_config": {
+    "num_items": 12101,
+    "max_length": 50,
+    "hidden_size": 50,
+    "num_blocks": 2,
+    "num_heads": 1,
+    "dropout": 0.5
+  },
+  "training_arguments": {
+    "seed": 42,
+    "device": "cpu",
+    "epochs": 201,
+    "patience": 20,
+    "batch_size": 128,
+    "eval_batch_size": 128,
+    "max_length": 50,
+    "hidden_size": 50,
+    "num_blocks": 2,
+    "num_heads": 1,
+    "dropout": 0.5,
+    "lr": 0.001,
+    "l2_emb": 0.0,
+    "max_batches": null,
+    "max_eval_users": null,
+    "threads": 4
+  },
+  "versions": {
+    "python": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+    "torch": "2.15.0",
+    "numpy": "2.5.5"
+  },
+  "manifest_sha256": "3ce6f8ad6b089575c54e22d0f4a897638e579aafdc702438c50cbc4e807999f7",
+  "reference_commit": "e3738967fddab206d6eeb4fda433e7a7034dd8b1",
+  "validation": {
+    "split": "validation",
+    "selected_epoch": 78,
+    "seed": 42,
+    "smoke_run": false,
+    "all_users": {
+      "users": 22363,
+      "recall_at_10": 0.06483924388885498,
+      "ndcg_at_10": 0.03387248516082764
+    },
+    "without_boundary_ties": {
+      "users": 8003,
+      "recall_at_10": 0.04573284834623337,
+      "ndcg_at_10": 0.0242033451795578
+    },
+    "targets_unseen_in_training": 51
+  },
+  "test": {
+    "split": "test",
+    "selected_epoch": 78,
+    "seed": 42,
+    "smoke_run": false,
+    "all_users": {
+      "users": 22363,
+      "recall_at_10": 0.05124536156654358,
+      "ndcg_at_10": 0.02601417526602745
+    },
+    "without_boundary_ties": {
+      "users": 8003,
+      "recall_at_10": 0.03798575699329376,
+      "ndcg_at_10": 0.01944877579808235
+    },
+    "targets_unseen_in_training": 138
+  },
+  "notes": [
+    "Checkpoint selected exclusively by validation NDCG@10; configuration fixed before test evaluation.",
+    "Shared full-catalog protocol; not comparable to the paper's sampled evaluation.",
+    "SASRec and gSASRec use different backbone and training settings; this is not a loss-only ablation."
+  ],
+  "checkpoint": {
+    "path": "sasrec/results/seed42_best.pt",
+    "sha256": "f63916ccb4360a97ab0ff0e32f9b4ef1b5363e3bde66e42546c0cbf2bb615671",
+    "bytes": 2545425
+  },
+  "epoch_metrics_path": "sasrec/results/seed42_metrics.jsonl"
+}
