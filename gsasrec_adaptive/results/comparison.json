@@ -1,0 +1,73 @@
+{
+  "status": "uniform and fixed semantic controls complete; adaptive design pending user answer",
+  "test_evaluated": false,
+  "runs": {
+    "uniform_seed42": {
+      "summary": {
+        "best_epoch": 15,
+        "stopped_epoch": 20,
+        "best_validation_ndcg_at_10": 0.008714806709025528,
+        "elapsed_seconds": 264.68932487501297,
+        "smoke_run": false
+      },
+      "validation": {
+        "split": "validation",
+        "mode": "uniform",
+        "seed": 42,
+        "selected_epoch": 15,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.016813486562625764,
+          "ndcg_at_10": 0.008714806709025528
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.010621017118580533,
+          "ndcg_at_10": 0.005131519048361938
+        },
+        "targets_unseen_in_training": 51
+      },
+      "initial_state_sha256": "685aa46cda282a0cc26b05420d220104f59b4ec0e88844f479e55be8eefdfff0",
+      "parameter_count": 3323136,
+      "checkpoint_local_path": "runs/adaptive/uniform_seed42/best.pt",
+      "checkpoint_sha256": "84e46d67b093ca3b012239dc9f67a2d4a835a944ae8b23d4353001c42cf30c09"
+    },
+    "fixed_seed42": {
+      "summary": {
+        "best_epoch": 4,
+        "stopped_epoch": 9,
+        "best_validation_ndcg_at_10": 0.006723243965230135,
+        "elapsed_seconds": 131.1673593330197,
+        "smoke_run": false
+      },
+      "validation": {
+        "split": "validation",
+        "mode": "fixed",
+        "seed": 42,
+        "selected_epoch": 4,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.01310199883736529,
+          "ndcg_at_10": 0.006723243965230135
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.010246157690865926,
+          "ndcg_at_10": 0.005673396425210343
+        },
+        "targets_unseen_in_training": 51
+      },
+      "initial_state_sha256": "685aa46cda282a0cc26b05420d220104f59b4ec0e88844f479e55be8eefdfff0",
+      "parameter_count": 3323136,
+      "checkpoint_local_path": "runs/adaptive/fixed_seed42/best.pt",
+      "checkpoint_sha256": "4cb4154829a870862d9a1f124c4f5c564c38244e198affd351a75c94b1611089"
+    }
+  },
+  "fixed_vs_uniform_relative_change": {
+    "recall_at_10": -0.2207446808510638,
+    "ndcg_at_10": -0.22852632425373498
+  },
+  "timing_warning": "Runs overlapped on the same CPU; wall-clock times do not support a clean speed comparison."
+}

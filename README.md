@@ -185,3 +185,13 @@ The original `runs/` directory and the environment remain ignored. Only the
 selected reportable checkpoint and epoch log are retained here; smoke artifacts
 are excluded. See PROJECT_PLAN.md for the comparison audit and proposed sampling
 experiment. Adaptive sampling has not been implemented or trained.
+
+## Isolated negative-sampling experiments
+
+On `vanshik-adaptive-sampling`, Hrithik's files were copied into
+`gsasrec_adaptive/` and the original `gsasrec/` files remain unchanged.
+The uniform control and a fixed semantic mixture have completed full seed-42
+validation runs. The fixed mixture was worse on the primary all-user metric;
+there is no adaptive improvement claim. The actual adaptive rule awaits the
+user's curriculum-versus-confidence decision. See
+[the implementation and experiment report](gsasrec_adaptive/README.md).
