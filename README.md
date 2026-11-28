@@ -32,6 +32,19 @@ The archive contains the raw downloads under `data/raw/` and the shared split an
 
 Both teammates use the same split, candidate catalog, and evaluator. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the experiment protocol.
 
+## Lecture benchmark tasks
+
+| Model | Owner | Lecture slides |
+|---|---|---|
+| Item-based collaborative filtering (Jaccard or cosine) | Vanshik | [Recommendation](slides/recommendation.pdf) |
+| BPR matrix factorization | Vanshik | [Recommendation](slides/recommendation.pdf) |
+| Factorizing Personalized Markov Chains (FPMC) | Hrithik | [Temporal](slides/temporal.pdf) |
+| Factorization machine with text and historical rating features | Hrithik | [Content and structure](slides/content%20and%20structure.pdf) |
+
+All four benchmarks use the shared split and full-catalog Recall@10 and NDCG@10 protocol. The factorization machine uses product text and history-available rating features as a feature adaptation of the lecture model. Select settings on validation.
+
+The seven uploaded lecture PDFs are available in [slides/](slides/).
+
 ## Results from seed 42
 
 These experiments ran locally on Mac. The gSASRec experiments used a maximum of 50 epochs and early stopping after five epochs without better validation NDCG@10. SASRec used its reference defaults (maximum 201 epochs, patience 20), stopped at epoch 98, and selected epoch 78. The best validation checkpoint was evaluated on test. Evaluation ranks the full catalog and filters previously observed products. Test inputs include the validation interaction and its historical rating when applicable.
