@@ -1,0 +1,7 @@
+{
+  "best_epoch": 4,
+  "stopped_epoch": 9,
+  "best_validation_ndcg_at_10": 0.007071597517476069,
+  "elapsed_seconds": 130.5040216659545,
+  "smoke_run": false
+}

@@ -193,3 +193,17 @@ novelty review:
 - [Generating Negative Samples for Sequential Recommendation](https://arxiv.org/abs/2208.03645)
 - [Evaluating Performance and Bias of Negative Sampling in Large-Scale Sequential Recommendation Models](https://arxiv.org/abs/2410.17276)
 - [UFNRec: Utilizing False Negative Samples for Sequential Recommendation](https://arxiv.org/abs/2208.04116)
+
+## Completed sampling experiments (adaptive branch)
+
+Both curriculum and per-target confidence samplers are implemented in the
+isolated `gsasrec_adaptive/` copy. Uniform, fixed, curriculum, and confidence
+completed full seed-42 training and final test evaluation. Uniform remained
+best on primary validation/test NDCG@10. Confidence-driven was the strongest
+adaptive arm: test Recall@10 0.011716 versus uniform 0.011626, and test NDCG@10
+0.006122 versus 0.006171. No overall improvement or significance claim is made.
+The original code, splits, and text embeddings are unchanged. The earlier
+proposal is historical; the [final report](gsasrec_adaptive/README.md) supersedes
+its pending-design status. All four checkpoints, logs, settings, and results
+are saved under `gsasrec_adaptive/results/`. Additional seeds and the separately
+assigned lecture baselines remain future work.

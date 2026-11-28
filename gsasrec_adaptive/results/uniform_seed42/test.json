@@ -1,0 +1,18 @@
+{
+  "split": "test",
+  "mode": "uniform",
+  "seed": 42,
+  "selected_epoch": 15,
+  "smoke_run": false,
+  "all_users": {
+    "users": 22363,
+    "recall_at_10": 0.01162634709117739,
+    "ndcg_at_10": 0.006171477474747297
+  },
+  "without_boundary_ties": {
+    "users": 8003,
+    "recall_at_10": 0.008746719980007497,
+    "ndcg_at_10": 0.00394341044298808
+  },
+  "targets_unseen_in_training": 138
+}

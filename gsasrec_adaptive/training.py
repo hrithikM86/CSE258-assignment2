@@ -39,7 +39,7 @@ def gsasrec_loss(model, inputs, targets, num_items, num_negatives=32, t=0.5, sam
     states = model(inputs)[valid].unsqueeze(1)
     positives = targets[valid]
     negatives = (sample_uniform_negatives(positives, num_items, num_negatives)
-                 if sampler is None else sampler.sample(positives, num_negatives))
+                 if sampler is None else sampler.sample(positives, num_negatives, model=model, states=states.squeeze(1)))
     candidate_ids = torch.cat((positives.unsqueeze(-1), negatives), dim=-1)
     logits = model.score_candidates(states, candidate_ids.unsqueeze(1)).squeeze(1)
 

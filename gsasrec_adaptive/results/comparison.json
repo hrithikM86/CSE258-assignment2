@@ -1,8 +1,55 @@
 {
-  "status": "uniform and fixed semantic controls complete; adaptive design pending user answer",
-  "test_evaluated": false,
+  "status": "All four seed-42 experiments complete; both adaptive implementations complete",
+  "test_evaluated": true,
+  "selection": {
+    "frozen_at_utc": "2026-11-28T08:00:48.939006+00:00",
+    "selected_overall": "uniform",
+    "selected_adaptive": "confidence",
+    "criterion": "all-user validation NDCG@10 only",
+    "candidates": {
+      "uniform": {
+        "selected_epoch": 15,
+        "validation": {
+          "users": 22363,
+          "recall_at_10": 0.016813486562625764,
+          "ndcg_at_10": 0.008714806709025528
+        }
+      },
+      "fixed": {
+        "selected_epoch": 4,
+        "validation": {
+          "users": 22363,
+          "recall_at_10": 0.01310199883736529,
+          "ndcg_at_10": 0.006723243965230135
+        }
+      },
+      "curriculum": {
+        "selected_epoch": 4,
+        "validation": {
+          "users": 22363,
+          "recall_at_10": 0.01368331619192416,
+          "ndcg_at_10": 0.007071597517476069
+        }
+      },
+      "confidence": {
+        "selected_epoch": 15,
+        "validation": {
+          "users": 22363,
+          "recall_at_10": 0.016589902964718507,
+          "ndcg_at_10": 0.008376954175426278
+        }
+      }
+    },
+    "test_evaluation_modes": [
+      "uniform",
+      "fixed",
+      "curriculum",
+      "confidence"
+    ],
+    "policy": "No sampler/setting changes after this test evaluation; test scores do not change the validation selection."
+  },
   "runs": {
-    "uniform_seed42": {
+    "uniform": {
       "summary": {
         "best_epoch": 15,
         "stopped_epoch": 20,
@@ -28,12 +75,42 @@
         },
         "targets_unseen_in_training": 51
       },
+      "test": {
+        "split": "test",
+        "mode": "uniform",
+        "seed": 42,
+        "selected_epoch": 15,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.01162634709117739,
+          "ndcg_at_10": 0.006171477474747297
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.008746719980007497,
+          "ndcg_at_10": 0.00394341044298808
+        },
+        "targets_unseen_in_training": 138
+      },
       "initial_state_sha256": "685aa46cda282a0cc26b05420d220104f59b4ec0e88844f479e55be8eefdfff0",
       "parameter_count": 3323136,
-      "checkpoint_local_path": "runs/adaptive/uniform_seed42/best.pt",
-      "checkpoint_sha256": "84e46d67b093ca3b012239dc9f67a2d4a835a944ae8b23d4353001c42cf30c09"
+      "checkpoint_path": "gsasrec_adaptive/results/checkpoints/uniform_seed42.pt",
+      "checkpoint_sha256": "84e46d67b093ca3b012239dc9f67a2d4a835a944ae8b23d4353001c42cf30c09",
+      "sampling_at_selected_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 0,
+        "actual_semantic": 0,
+        "fallback_negatives": 0
+      },
+      "sampling_at_last_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 0,
+        "actual_semantic": 0,
+        "fallback_negatives": 0
+      }
     },
-    "fixed_seed42": {
+    "fixed": {
       "summary": {
         "best_epoch": 4,
         "stopped_epoch": 9,
@@ -59,15 +136,204 @@
         },
         "targets_unseen_in_training": 51
       },
+      "test": {
+        "split": "test",
+        "mode": "fixed",
+        "seed": 42,
+        "selected_epoch": 4,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.010418995662478201,
+          "ndcg_at_10": 0.005388283474215353
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.008871673122579032,
+          "ndcg_at_10": 0.005464790621825631
+        },
+        "targets_unseen_in_training": 138
+      },
       "initial_state_sha256": "685aa46cda282a0cc26b05420d220104f59b4ec0e88844f479e55be8eefdfff0",
       "parameter_count": 3323136,
-      "checkpoint_local_path": "runs/adaptive/fixed_seed42/best.pt",
-      "checkpoint_sha256": "4cb4154829a870862d9a1f124c4f5c564c38244e198affd351a75c94b1611089"
+      "checkpoint_path": "gsasrec_adaptive/results/checkpoints/fixed_seed42.pt",
+      "checkpoint_sha256": "4cb4154829a870862d9a1f124c4f5c564c38244e198affd351a75c94b1611089",
+      "sampling_at_selected_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 2102592,
+        "actual_semantic": 2101328,
+        "fallback_negatives": 1264
+      },
+      "sampling_at_last_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 2102592,
+        "actual_semantic": 2101328,
+        "fallback_negatives": 1264
+      }
+    },
+    "curriculum": {
+      "summary": {
+        "best_epoch": 4,
+        "stopped_epoch": 9,
+        "best_validation_ndcg_at_10": 0.007071597517476069,
+        "elapsed_seconds": 130.5040216659545,
+        "smoke_run": false
+      },
+      "validation": {
+        "split": "validation",
+        "mode": "curriculum",
+        "seed": 42,
+        "selected_epoch": 4,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.01368331619192416,
+          "ndcg_at_10": 0.007071597517476069
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.010246157690865926,
+          "ndcg_at_10": 0.005766233049294563
+        },
+        "targets_unseen_in_training": 51
+      },
+      "test": {
+        "split": "test",
+        "mode": "curriculum",
+        "seed": 42,
+        "selected_epoch": 4,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.010508429101641103,
+          "ndcg_at_10": 0.005400458797818431
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.008746719980007497,
+          "ndcg_at_10": 0.005182936042530254
+        },
+        "targets_unseen_in_training": 138
+      },
+      "initial_state_sha256": "685aa46cda282a0cc26b05420d220104f59b4ec0e88844f479e55be8eefdfff0",
+      "parameter_count": 3323136,
+      "checkpoint_path": "gsasrec_adaptive/results/checkpoints/curriculum_seed42.pt",
+      "checkpoint_sha256": "8dbccfa0d0914a499dcbd55c53479bb86db6477a588cb12e613adf12964cce2f",
+      "sampling_at_selected_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 262824,
+        "actual_semantic": 262666,
+        "fallback_negatives": 158,
+        "confidence_sum": 0.0,
+        "confidence_targets": 0
+      },
+      "sampling_at_last_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 1314120,
+        "actual_semantic": 1313330,
+        "fallback_negatives": 790,
+        "confidence_sum": 0.0,
+        "confidence_targets": 0
+      }
+    },
+    "confidence": {
+      "summary": {
+        "best_epoch": 15,
+        "stopped_epoch": 20,
+        "best_validation_ndcg_at_10": 0.008376954175426278,
+        "elapsed_seconds": 288.8641489170259,
+        "smoke_run": false
+      },
+      "validation": {
+        "split": "validation",
+        "mode": "confidence",
+        "seed": 42,
+        "selected_epoch": 15,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.016589902964718507,
+          "ndcg_at_10": 0.008376954175426278
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.011370735974009746,
+          "ndcg_at_10": 0.00518681451847775
+        },
+        "targets_unseen_in_training": 51
+      },
+      "test": {
+        "split": "test",
+        "mode": "confidence",
+        "seed": 42,
+        "selected_epoch": 15,
+        "smoke_run": false,
+        "all_users": {
+          "users": 22363,
+          "recall_at_10": 0.011715780530340295,
+          "ndcg_at_10": 0.006121860261354395
+        },
+        "without_boundary_ties": {
+          "users": 8003,
+          "recall_at_10": 0.008621766837435962,
+          "ndcg_at_10": 0.003946035171071432
+        },
+        "targets_unseen_in_training": 138
+      },
+      "initial_state_sha256": "685aa46cda282a0cc26b05420d220104f59b4ec0e88844f479e55be8eefdfff0",
+      "parameter_count": 3323136,
+      "checkpoint_path": "gsasrec_adaptive/results/checkpoints/confidence_seed42.pt",
+      "checkpoint_sha256": "7ee519952e0827c6e097c7b348f1d1a6af34520358271534832ac6ec14f14973",
+      "sampling_at_selected_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 126376,
+        "actual_semantic": 126325,
+        "fallback_negatives": 51,
+        "confidence_sum": 37512.20847320557,
+        "confidence_targets": 131412
+      },
+      "sampling_at_last_epoch": {
+        "total_negatives": 4205184,
+        "requested_semantic": 127933,
+        "actual_semantic": 127899,
+        "fallback_negatives": 34,
+        "confidence_sum": 38045.0065574646,
+        "confidence_targets": 131412
+      }
     }
   },
-  "fixed_vs_uniform_relative_change": {
-    "recall_at_10": -0.2207446808510638,
-    "ndcg_at_10": -0.22852632425373498
+  "relative_change_vs_uniform": {
+    "fixed": {
+      "validation": {
+        "recall_at_10": -0.2207446808510638,
+        "ndcg_at_10": -0.22852632425373498
+      },
+      "test": {
+        "recall_at_10": -0.10384615384615381,
+        "ndcg_at_10": -0.1269054296538631
+      }
+    },
+    "curriculum": {
+      "validation": {
+        "recall_at_10": -0.18617021276595747,
+        "ndcg_at_10": -0.18855371626861928
+      },
+      "test": {
+        "recall_at_10": -0.09615384615384615,
+        "ndcg_at_10": -0.12493259192531314
+      }
+    },
+    "confidence": {
+      "validation": {
+        "recall_at_10": -0.013297872340425565,
+        "ndcg_at_10": -0.038767645098697456
+      },
+      "test": {
+        "recall_at_10": 0.007692307692307665,
+        "ndcg_at_10": -0.008039762535944961
+      }
+    }
   },
-  "timing_warning": "Runs overlapped on the same CPU; wall-clock times do not support a clean speed comparison."
+  "conclusion": "Uniform remains best on primary validation and test NDCG@10. Confidence-driven sampling gives a small recall/NDCG tradeoff, not an overall improvement. Single seed only.",
+  "timing_warning": "Uniform/fixed runs overlapped on CPU; adaptive runs were sequential. Different stopping lengths and execution conditions preclude clean speedup claims."
 }

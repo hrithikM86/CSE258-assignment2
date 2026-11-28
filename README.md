@@ -56,7 +56,7 @@ These experiments ran locally on Mac. The gSASRec experiments used a maximum of 
 
 The feature models add projected, frozen product text vectors to history inputs. The rating version also adds trainable embeddings for historical star ratings. Text plus ratings improved all-user test Recall@10 by 19.2% and NDCG@10 by 4.6% relative to gSASRec. Text alone improved recall but reduced all-user NDCG. These are single-seed results, and consistency across seeds remains to be measured.
 
-The implementation uses an adapted PyTorch Transformer backbone with uniform negative sampling and gBCE. SASRec is implemented under `sasrec/`, with the full seed-42 results recorded in [sasrec/results/seed42.json](sasrec/results/seed42.json). Adaptive semantic sampling remains pending. Next, implement adaptive semantic sampling and run additional seeds using fixed settings. SASRec and gSASRec use different backbone and training settings; their comparison is not a controlled loss-only ablation.
+The implementation uses an adapted PyTorch Transformer backbone with uniform negative sampling and gBCE. SASRec is implemented under `sasrec/`, with the full seed-42 results recorded in [sasrec/results/seed42.json](sasrec/results/seed42.json). Adaptive semantic sampling results are documented in `gsasrec_adaptive/README.md`. Next, implement adaptive semantic sampling and run additional seeds using fixed settings. SASRec and gSASRec use different backbone and training settings; their comparison is not a controlled loss-only ablation.
 
 ## SASRec reproduction (Vanshik)
 
@@ -163,7 +163,7 @@ reference commit and split fingerprint), `metrics.jsonl` (validation metrics and
 training/evaluation times), `best.pt`, and `summary.json`. Run artifacts are
 ignored by Git. Smoke metrics must not be presented as final experiment results.
 
-The adaptive semantic sampling extension remains a separate, unimplemented task.
+The adaptive sampling extension is implemented separately in `gsasrec_adaptive/` on `vanshik-adaptive-sampling`.
 
 ### Saved baseline artifacts
 
@@ -192,6 +192,8 @@ On `vanshik-adaptive-sampling`, Hrithik's files were copied into
 `gsasrec_adaptive/` and the original `gsasrec/` files remain unchanged.
 The uniform control and a fixed semantic mixture have completed full seed-42
 validation runs. The fixed mixture was worse on the primary all-user metric;
-there is no adaptive improvement claim. The actual adaptive rule awaits the
-user's curriculum-versus-confidence decision. See
+there is no adaptive improvement claim. Both epoch-curriculum and model-confidence adaptive rules are implemented,
+fully trained, and test-evaluated. Uniform retains the best primary NDCG@10;
+confidence sampling gives a small recall/NDCG tradeoff, with no overall
+improvement claim. Results currently use one seed. See
 [the implementation and experiment report](gsasrec_adaptive/README.md).

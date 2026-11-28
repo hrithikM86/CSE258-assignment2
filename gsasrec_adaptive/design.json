@@ -1,0 +1,23 @@
+{
+  "status": "rules fixed before adaptive full validation runs",
+  "seed": 42,
+  "num_negatives": 32,
+  "max_semantic_fraction": 0.5,
+  "warmup_epochs": 3,
+  "neighbors": 100,
+  "anchor": "current training target",
+  "curriculum": {
+    "ramp_epochs": 10,
+    "fraction": "0 through epoch 3; 0.5 * min(1, (epoch-3)/10) afterwards"
+  },
+  "confidence": {
+    "probe": "same 32 uniform negatives already drawn; detached scores from current forward states",
+    "signal": "c = sigmoid(positive_logit - max(uniform_negative_logits))",
+    "fraction": "0 through epoch 3; 0.5 * clamp(2*c-1,0,1) per target afterwards",
+    "note": "relative score confidence, not calibrated interaction probability"
+  },
+  "rounding": "floor(32*fraction+0.5), capped to leave at least one uniform slot",
+  "missing_text": "replace requested semantic slots with existing uniform draws",
+  "selection": "best all-user validation NDCG@10; no new test access until final selection",
+  "hypothesis": "gradual or difficulty-dependent introduction may avoid fixed-mixture degradation; no guaranteed improvement"
+}

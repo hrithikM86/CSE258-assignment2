@@ -14,7 +14,7 @@ from gsasrec_adaptive.data import load_training_data
 from gsasrec_adaptive.evaluate import SPLIT_DIR, evaluate, load_validation
 from gsasrec_adaptive.model import GSASRec
 from gsasrec_adaptive.neighbors import load_or_build, file_sha256
-from gsasrec_adaptive.sampling import SemanticSampler
+from gsasrec_adaptive.sampling import SemanticSampler, AdaptiveSemanticSampler
 from gsasrec_adaptive.training import gsasrec_loss, make_batch
 from sasrec.protocol import verify_split
 
@@ -38,7 +38,7 @@ def summarize(ranks,no_ties,targets,training_items):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode",choices=("uniform","fixed"),required=True)
+    parser.add_argument("--mode",choices=("uniform","fixed","curriculum","confidence"),required=True)
     parser.add_argument("--run-dir",type=Path,required=True)
     parser.add_argument("--split-dir",type=Path,default=SPLIT_DIR)
     parser.add_argument("--embeddings",type=Path,default=SPLIT_DIR/"item_text_embeddings.npz")
@@ -52,6 +52,8 @@ def main():
     parser.add_argument("--t",type=float,default=0.5)
     parser.add_argument("--neighbors",type=int,default=100)
     parser.add_argument("--semantic-fraction",type=float,default=0.5)
+    parser.add_argument("--warmup-epochs",type=int,default=3)
+    parser.add_argument("--ramp-epochs",type=int,default=10)
     parser.add_argument("--max-batches",type=int)
     parser.add_argument("--max-eval-users",type=int)
     args=parser.parse_args()
@@ -61,6 +63,8 @@ def main():
         parser.error("Invalid calibration or mixture fraction.")
     if any(v is not None and v<1 for v in (args.max_batches,args.max_eval_users)):
         parser.error("Smoke limits must be positive.")
+    if args.warmup_epochs<0 or args.ramp_epochs<1:
+        parser.error("Invalid warmup/ramp epochs.")
     if args.run_dir.exists():
         parser.error("Choose a new run-dir; existing experiments are never overwritten.")
     torch.set_num_threads(args.threads)
@@ -75,7 +79,11 @@ def main():
     sampler,neighbor_metadata=None,None
     if args.mode!="uniform":
         table,has_text,neighbor_metadata=load_or_build(args.embeddings,args.cache_dir,num_items,args.neighbors)
-        sampler=SemanticSampler(num_items,table,has_text,args.semantic_fraction,args.seed)
+        if args.mode=="fixed":
+            sampler=SemanticSampler(num_items,table,has_text,args.semantic_fraction,args.seed)
+        else:
+            sampler=AdaptiveSemanticSampler(num_items,table,has_text,args.semantic_fraction,args.seed,
+                        mode=args.mode,warmup_epochs=args.warmup_epochs,ramp_epochs=args.ramp_epochs)
     # Cache building and sampler initialization do not alter the reference RNG.
     rng=random.Random(args.seed)
     torch.manual_seed(args.seed)
@@ -88,6 +96,7 @@ def main():
     args.run_dir.mkdir(parents=True)
     metadata={"arguments":{k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()},
               "mode":args.mode,"seed":args.seed,"smoke_run":smoke,"model_config":model_config,
+              "source_sha256":{name:file_sha256(Path(__file__).parent/name) for name in ("sampling.py","training.py","experiment.py","model.py","neighbors.py")},
               "initial_state_sha256":initial_hash,"manifest_sha256":fingerprint,
               "neighbor_cache":neighbor_metadata,"parameter_count":sum(p.numel() for p in model.parameters()),
               "versions":{"python":sys.version,"torch":str(torch.__version__),"numpy":str(np.__version__)},
@@ -102,7 +111,10 @@ def main():
         model.train(); rng.shuffle(sequences)
         total_loss,total_targets=0.,0
         if sampler is not None:
-            sampler.reset_stats()
+            if isinstance(sampler,AdaptiveSemanticSampler):
+                sampler.begin_epoch(epoch)
+            else:
+                sampler.reset_stats()
         for batch_number,offset in enumerate(range(0,len(sequences),args.batch_size)):
             if args.max_batches is not None and batch_number>=args.max_batches:
                 break

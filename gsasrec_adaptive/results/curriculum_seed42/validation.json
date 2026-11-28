@@ -1,0 +1,18 @@
+{
+  "split": "validation",
+  "mode": "curriculum",
+  "seed": 42,
+  "selected_epoch": 4,
+  "smoke_run": false,
+  "all_users": {
+    "users": 22363,
+    "recall_at_10": 0.01368331619192416,
+    "ndcg_at_10": 0.007071597517476069
+  },
+  "without_boundary_ties": {
+    "users": 8003,
+    "recall_at_10": 0.010246157690865926,
+    "ndcg_at_10": 0.005766233049294563
+  },
+  "targets_unseen_in_training": 51
+}

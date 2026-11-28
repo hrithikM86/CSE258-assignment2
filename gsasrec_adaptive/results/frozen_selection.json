@@ -1,0 +1,47 @@
+{
+  "frozen_at_utc": "2026-11-28T08:00:48.939006+00:00",
+  "selected_overall": "uniform",
+  "selected_adaptive": "confidence",
+  "criterion": "all-user validation NDCG@10 only",
+  "candidates": {
+    "uniform": {
+      "selected_epoch": 15,
+      "validation": {
+        "users": 22363,
+        "recall_at_10": 0.016813486562625764,
+        "ndcg_at_10": 0.008714806709025528
+      }
+    },
+    "fixed": {
+      "selected_epoch": 4,
+      "validation": {
+        "users": 22363,
+        "recall_at_10": 0.01310199883736529,
+        "ndcg_at_10": 0.006723243965230135
+      }
+    },
+    "curriculum": {
+      "selected_epoch": 4,
+      "validation": {
+        "users": 22363,
+        "recall_at_10": 0.01368331619192416,
+        "ndcg_at_10": 0.007071597517476069
+      }
+    },
+    "confidence": {
+      "selected_epoch": 15,
+      "validation": {
+        "users": 22363,
+        "recall_at_10": 0.016589902964718507,
+        "ndcg_at_10": 0.008376954175426278
+      }
+    }
+  },
+  "test_evaluation_modes": [
+    "uniform",
+    "fixed",
+    "curriculum",
+    "confidence"
+  ],
+  "policy": "No sampler/setting changes after this test evaluation; test scores do not change the validation selection."
+}

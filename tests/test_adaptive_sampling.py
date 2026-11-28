@@ -12,7 +12,7 @@ from gsasrec.model import GSASRec as OriginalModel
 from gsasrec.training import gsasrec_loss as original_loss
 from gsasrec_adaptive.model import GSASRec
 from gsasrec_adaptive.neighbors import build_neighbors, load_or_build
-from gsasrec_adaptive.sampling import SemanticSampler
+from gsasrec_adaptive.sampling import SemanticSampler, AdaptiveSemanticSampler
 from gsasrec_adaptive.training import gsasrec_loss, make_batch
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -82,6 +82,52 @@ class AdaptiveSamplingTests(unittest.TestCase):
         d=SemanticSampler(4,self.table,self.flags,.5,42)
         torch.manual_seed(3); second=d.sample(positives,4)
         torch.testing.assert_close(first,second,rtol=0,atol=0)
+
+    def test_curriculum_schedule_and_constant_budget(self):
+        sampler=AdaptiveSemanticSampler(4,self.table,self.flags,.5,42,mode="curriculum")
+        positives=torch.tensor([1,2,3,4])
+        for epoch,expected in ((1,0),(3,0),(4,2),(8,8),(13,16),(50,16)):
+            sampler.begin_epoch(epoch)
+            negatives=sampler.sample(positives,32)
+            self.assertEqual(negatives.shape,(4,32))
+            self.assertEqual(sampler.stats["requested_semantic"],4*expected)
+            self.assertEqual(sampler.stats["actual_semantic"],3*expected)
+            self.assertFalse(negatives.eq(positives[:,None]).any())
+
+    def test_confidence_allocates_by_margin_without_gradients(self):
+        from torch import nn
+        class Probe(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.output_embeddings=nn.Embedding.from_pretrained(torch.tensor([[0.],[4.],[0.],[0.],[0.]]),freeze=False)
+        model=Probe()
+        states=torch.tensor([[1.],[-1.],[0.]],requires_grad=True)
+        positives=torch.tensor([1,1,1])
+        sampler=AdaptiveSemanticSampler(4,self.table,self.flags,.5,42,mode="confidence")
+        sampler.begin_epoch(4)
+        draws=sampler.sample(positives,4,model=model,states=states)
+        self.assertEqual(sampler.stats["requested_semantic"],2)
+        self.assertEqual(sampler.stats["confidence_targets"],3)
+        self.assertTrue(set(draws[0,-2:].tolist()).issubset({2,3}))
+        self.assertIsNone(states.grad)
+        self.assertIsNone(model.output_embeddings.weight.grad)
+        self.assertEqual(draws.shape,(3,4))
+
+    def test_adaptive_warmup_matches_uniform_loss_and_gradients(self):
+        for mode in ("curriculum","confidence"):
+            original=OriginalModel(4,max_length=5,hidden_size=8,dropout=.3)
+            copied=GSASRec(4,max_length=5,hidden_size=8,dropout=.3)
+            copied.load_state_dict(original.state_dict())
+            sampler=AdaptiveSemanticSampler(4,self.table,self.flags,.5,42,mode=mode)
+            sampler.begin_epoch(1)
+            x,y=make_batch([[1,2,3],[2,4]],5)
+            torch.manual_seed(11); a=original_loss(original,x,y,4,3,.5)
+            torch.manual_seed(11); b=gsasrec_loss(copied,x,y,4,3,.5,sampler)
+            torch.testing.assert_close(a,b,rtol=0,atol=0)
+            a.backward(); b.backward()
+            for first,second in zip(original.parameters(),copied.parameters()):
+                torch.testing.assert_close(first.grad,second.grad,rtol=0,atol=0)
+            self.assertEqual(sampler.stats["actual_semantic"],0)
 
     def test_invalid_neighbors_and_no_uniform_component_rejected(self):
         with self.assertRaises(ValueError):
