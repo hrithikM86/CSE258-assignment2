@@ -1,0 +1,37 @@
+{
+  "status": "Predefined before baseline training/test evaluation",
+  "branch": "vanshik-course-baselines",
+  "base_vanshik_commit": "f11a36a",
+  "imported_main_commit": "18398dde1b8ab33cf70af449281f35af39603910",
+  "item_cf": {
+    "metrics": [
+      "jaccard",
+      "cosine"
+    ],
+    "neighbors": "all nonzero similarities; diagonal zero",
+    "score": "sum of item similarities to full observed history"
+  },
+  "bpr": {
+    "factors": [
+      32,
+      64
+    ],
+    "regularization": [
+      0.0001,
+      0.001
+    ],
+    "learning_rate": 0.01,
+    "batch_size": 2048,
+    "epochs": 100,
+    "patience": 10,
+    "seed": 42,
+    "optimizer": "Adam",
+    "positive_sampling": "uniform bootstrap over training interaction pairs",
+    "negatives": "one uniform catalog draw per positive, excluding all user training positives",
+    "score": "user factor dot item factor + item bias"
+  },
+  "selection": "all-user validation NDCG@10; checkpoint and configuration fixed before test",
+  "test_history": "CF adds validation interaction to query only; BPR factors remain training-only and validation is added to filtering",
+  "shared_protocol": "full catalog, observed-item filtering, deterministic item-ID ties, main and no-boundary-tie metrics; retain cold targets",
+  "no_text_embeddings": true
+}

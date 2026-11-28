@@ -1,0 +1,67 @@
+{
+  "seed": 42,
+  "smoke_run": false,
+  "manifest_sha256": "3ce6f8ad6b089575c54e22d0f4a897638e579aafdc702438c50cbc4e807999f7",
+  "arguments": {
+    "run_dir": "runs/course_baselines/seed42",
+    "split_dir": "/Users/vanshikwaghela/UCSD/FA26/CSE258_Recommender/assignment2/CSE258-assignment2/data/processed/beauty_5core",
+    "seed": 42,
+    "epochs": 100,
+    "patience": 10,
+    "batch_size": 2048,
+    "eval_batch_size": 256,
+    "threads": 4
+  },
+  "versions": {
+    "python": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+    "numpy": "2.5.5",
+    "scipy": "1.18.1",
+    "torch": "2.15.0"
+  },
+  "source_sha256": {
+    "run.py": "68c7cbe995c4dbd366bad24da703659bede7e8a9999c8e001841d4a764574a20",
+    "bpr.py": "e75b73c8636e7bfa641ef5ba92f6524cb94e9ab14747e7ab53c805db20098a3f",
+    "item_cf.py": "f81153e9d50e442f96c540d1ca48dfccb462ead63556e8190d23a36ad281bd3b",
+    "protocol.py": "f90eb4d1c8968bd7b78504a34357140c6c02e78364364d69d1b5279dc3ac2137"
+  },
+  "training_users": 22363,
+  "training_interactions": 153776,
+  "num_items": 12101,
+  "design": {
+    "status": "Predefined before baseline training/test evaluation",
+    "branch": "vanshik-course-baselines",
+    "base_vanshik_commit": "f11a36a",
+    "imported_main_commit": "18398dde1b8ab33cf70af449281f35af39603910",
+    "item_cf": {
+      "metrics": [
+        "jaccard",
+        "cosine"
+      ],
+      "neighbors": "all nonzero similarities; diagonal zero",
+      "score": "sum of item similarities to full observed history"
+    },
+    "bpr": {
+      "factors": [
+        32,
+        64
+      ],
+      "regularization": [
+        0.0001,
+        0.001
+      ],
+      "learning_rate": 0.01,
+      "batch_size": 2048,
+      "epochs": 100,
+      "patience": 10,
+      "seed": 42,
+      "optimizer": "Adam",
+      "positive_sampling": "uniform bootstrap over training interaction pairs",
+      "negatives": "one uniform catalog draw per positive, excluding all user training positives",
+      "score": "user factor dot item factor + item bias"
+    },
+    "selection": "all-user validation NDCG@10; checkpoint and configuration fixed before test",
+    "test_history": "CF adds validation interaction to query only; BPR factors remain training-only and validation is added to filtering",
+    "shared_protocol": "full catalog, observed-item filtering, deterministic item-ID ties, main and no-boundary-tie metrics; retain cold targets",
+    "no_text_embeddings": true
+  }
+}

@@ -69,7 +69,7 @@ These experiments ran locally on Mac. The gSASRec experiments used a maximum of 
 
 The feature models add projected, frozen product text vectors to history inputs. The rating version also adds trainable embeddings for historical star ratings. Text plus ratings improved all-user test Recall@10 by 19.2% and NDCG@10 by 4.6% relative to gSASRec. Text alone improved recall but reduced all-user NDCG. These are single-seed results, and consistency across seeds remains to be measured.
 
-The implementation uses an adapted PyTorch Transformer backbone with uniform negative sampling and gBCE. SASRec is implemented under `sasrec/`, with the full seed-42 results recorded in [sasrec/results/seed42.json](sasrec/results/seed42.json). Adaptive semantic sampling remains pending. Next, implement adaptive semantic sampling and run additional seeds using fixed settings. SASRec and gSASRec use different backbone and training settings; their comparison is not a controlled loss-only ablation.
+The implementation uses an adapted PyTorch Transformer backbone with uniform negative sampling and gBCE. SASRec is implemented under `sasrec/`, with the full seed-42 results recorded in [sasrec/results/seed42.json](sasrec/results/seed42.json). Adaptive sampling is complete on the separate [vanshik-adaptive-sampling](https://github.com/hrithikM86/CSE258-assignment2/tree/vanshik-adaptive-sampling) branch. Next, consolidate the team experiments and repeat selected settings across seeds. SASRec and gSASRec use different backbone and training settings; their comparison is not a controlled loss-only ablation.
 
 ## SASRec reproduction (Vanshik)
 
@@ -176,7 +176,7 @@ reference commit and split fingerprint), `metrics.jsonl` (validation metrics and
 training/evaluation times), `best.pt`, and `summary.json`. Run artifacts are
 ignored by Git. Smoke metrics must not be presented as final experiment results.
 
-The adaptive semantic sampling extension remains a separate, unimplemented task.
+The adaptive semantic sampling extension is complete on the separate [vanshik-adaptive-sampling](https://github.com/hrithikM86/CSE258-assignment2/tree/vanshik-adaptive-sampling) branch.
 
 ### Saved baseline artifacts
 
@@ -197,4 +197,27 @@ Re-evaluate the saved baseline after restoring the existing shared data:
 The original `runs/` directory and the environment remain ignored. Only the
 selected reportable checkpoint and epoch log are retained here; smoke artifacts
 are excluded. See PROJECT_PLAN.md for the comparison audit and proposed sampling
-experiment. Adaptive sampling has not been implemented or trained.
+experiment. Adaptive sampling has since been implemented and evaluated on the separate [vanshik-adaptive-sampling](https://github.com/hrithikM86/CSE258-assignment2/tree/vanshik-adaptive-sampling) branch.
+
+## Completed lecture baselines (Vanshik)
+
+The independent item-CF and BPR implementations are in `course_baselines/` on
+`vanshik-course-baselines`, based on `vanshik` with Hrithik's `main` lecture
+updates merged into this new branch only. Settings/checkpoints were selected
+on validation before test evaluation. Full seed-42 results:
+
+| Model | Validation Recall@10 | Validation NDCG@10 | Test Recall@10 | Test NDCG@10 |
+|---|---:|---:|---:|---:|
+| Popularity sanity check | 0.016322 | 0.007941 | 0.011403 | 0.005416 |
+| Item-CF (Jaccard) | 0.072218 | 0.042517 | 0.056611 | 0.032962 |
+| BPR-MF (64 factors) | 0.037294 | 0.019380 | 0.024192 | 0.011652 |
+
+Selected settings: Jaccard item similarities; BPR-MF with 64 factors, L2 0.001,
+epoch 19. The shared split, candidate catalog, filtering, and metric functions
+are unchanged. Text embeddings are not used by either baseline. Full code,
+objectives, lecture references, limitations, checkpoints, logs, and reproduction
+commands are in [the baseline report](course_baselines/README.md).
+
+The sampling work is complete on the separate
+[`vanshik-adaptive-sampling`](https://github.com/hrithikM86/CSE258-assignment2/tree/vanshik-adaptive-sampling)
+branch. This baseline branch intentionally does not copy or modify that work.

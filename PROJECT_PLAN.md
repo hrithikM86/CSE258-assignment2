@@ -59,12 +59,12 @@ These experiments ran locally on Mac. The gSASRec experiments used a maximum of 
 
 The feature models add projected, frozen product text vectors to history inputs. The rating version also adds trainable embeddings for historical star ratings. Text plus ratings improved all-user test Recall@10 by 19.2% and NDCG@10 by 4.6% relative to gSASRec. Text alone improved recall but reduced all-user NDCG. These are single-seed results, and consistency across seeds remains to be measured.
 
-The implementation uses an adapted PyTorch Transformer backbone with uniform negative sampling and gBCE. SASRec is implemented under `sasrec/`, with the full seed-42 results recorded in [sasrec/results/seed42.json](sasrec/results/seed42.json). Adaptive semantic sampling remains pending. Next, implement adaptive semantic sampling and run additional seeds using fixed settings. SASRec and gSASRec use different backbone and training settings; their comparison is not a controlled loss-only ablation.
+The implementation uses an adapted PyTorch Transformer backbone with uniform negative sampling and gBCE. SASRec is implemented under `sasrec/`, with the full seed-42 results recorded in [sasrec/results/seed42.json](sasrec/results/seed42.json). Adaptive sampling is complete on the separate [vanshik-adaptive-sampling](https://github.com/hrithikM86/CSE258-assignment2/tree/vanshik-adaptive-sampling) branch. Next, consolidate the team experiments and repeat selected settings across seeds. SASRec and gSASRec use different backbone and training settings; their comparison is not a controlled loss-only ablation.
 
 ## Baseline comparison audit and sampling proposal
 
-Status: SASRec baseline complete; the sampling design below is proposed only.
-No adaptive/semantic/popularity sampler has been implemented. All Vanshik work
+Historical proposal from the SASRec baseline stage. The sampling work is now complete on [vanshik-adaptive-sampling](https://github.com/hrithikM86/CSE258-assignment2/tree/vanshik-adaptive-sampling); its final report supersedes the proposal below.
+At the proposal stage, no adaptive/semantic/popularity sampler had been implemented. All Vanshik work
 remains on `vanshik`; use separate commits for the sampling work after the
 SASRec checkpoint commit. A separate branch is optional for parallel development,
 not required for this experiment or desired under the current branch constraint.
@@ -193,3 +193,17 @@ novelty review:
 - [Generating Negative Samples for Sequential Recommendation](https://arxiv.org/abs/2208.03645)
 - [Evaluating Performance and Bias of Negative Sampling in Large-Scale Sequential Recommendation Models](https://arxiv.org/abs/2410.17276)
 - [UFNRec: Utilizing False Negative Samples for Sequential Recommendation](https://arxiv.org/abs/2208.04116)
+
+## Completed Vanshik lecture tasks
+
+Both item-based CF and BPR matrix factorization are complete on
+`vanshik-course-baselines`. The branch starts from `vanshik` and merges main's
+lecture materials; existing branches and model source are preserved.
+Validation selected Jaccard and BPR with 64 factors/L2=0.001/epoch 19.
+Test Recall/NDCG are 0.056611/0.032962 for CF and 0.024192/0.011652 for BPR.
+See [the full lecture-baseline report](course_baselines/README.md) for all trials,
+subgroup results, objective definitions, saved models and checksums. Both models
+fit training interactions only and use the shared full-catalog evaluator.
+These are one-seed results; shared-seed robustness, team result consolidation,
+and the final workbook/presentation remain follow-up work. Hrithik's separate
+lecture model responsibilities are FPMC and feature-based factorization machines.

@@ -1,0 +1,26 @@
+{
+  "model": "bpr",
+  "config": {
+    "num_users": 22363,
+    "num_items": 12101,
+    "factors": 32
+  },
+  "regularization": 0.001,
+  "selected_epoch": 4,
+  "stopped_epoch": 14,
+  "elapsed_seconds": 8.569800959026907,
+  "validation": {
+    "all_users": {
+      "users": 22363,
+      "recall_at_10": 0.030586237087845802,
+      "ndcg_at_10": 0.015268758870661259
+    },
+    "without_boundary_ties": {
+      "users": 8003,
+      "recall_at_10": 0.02461576834321022,
+      "ndcg_at_10": 0.01264660432934761
+    },
+    "targets_unseen_in_training": 51
+  },
+  "parameter_count": 1115014
+}

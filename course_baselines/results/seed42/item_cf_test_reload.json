@@ -1,0 +1,15 @@
+{
+  "model": "item_cf",
+  "split": "test",
+  "all_users": {
+    "users": 22363,
+    "recall_at_10": 0.05661136656999588,
+    "ndcg_at_10": 0.0329623743891716
+  },
+  "without_boundary_ties": {
+    "users": 8003,
+    "recall_at_10": 0.03361239656805992,
+    "ndcg_at_10": 0.017599886283278465
+  },
+  "targets_unseen_in_training": 138
+}

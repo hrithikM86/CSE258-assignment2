@@ -1,0 +1,110 @@
+[
+  {
+    "model": "bpr",
+    "config": {
+      "num_users": 22363,
+      "num_items": 12101,
+      "factors": 32
+    },
+    "regularization": 0.0001,
+    "selected_epoch": 4,
+    "stopped_epoch": 14,
+    "elapsed_seconds": 8.61782033299096,
+    "validation": {
+      "all_users": {
+        "users": 22363,
+        "recall_at_10": 0.030541518703103065,
+        "ndcg_at_10": 0.01527417916804552
+      },
+      "without_boundary_ties": {
+        "users": 8003,
+        "recall_at_10": 0.02474072203040123,
+        "ndcg_at_10": 0.012663746252655983
+      },
+      "targets_unseen_in_training": 51
+    },
+    "parameter_count": 1115014,
+    "run_name": "bpr_f32_reg0.0001"
+  },
+  {
+    "model": "bpr",
+    "config": {
+      "num_users": 22363,
+      "num_items": 12101,
+      "factors": 32
+    },
+    "regularization": 0.001,
+    "selected_epoch": 4,
+    "stopped_epoch": 14,
+    "elapsed_seconds": 8.569800959026907,
+    "validation": {
+      "all_users": {
+        "users": 22363,
+        "recall_at_10": 0.030586237087845802,
+        "ndcg_at_10": 0.015268758870661259
+      },
+      "without_boundary_ties": {
+        "users": 8003,
+        "recall_at_10": 0.02461576834321022,
+        "ndcg_at_10": 0.01264660432934761
+      },
+      "targets_unseen_in_training": 51
+    },
+    "parameter_count": 1115014,
+    "run_name": "bpr_f32_reg0.001"
+  },
+  {
+    "model": "bpr",
+    "config": {
+      "num_users": 22363,
+      "num_items": 12101,
+      "factors": 64
+    },
+    "regularization": 0.0001,
+    "selected_epoch": 19,
+    "stopped_epoch": 29,
+    "elapsed_seconds": 20.289870957960375,
+    "validation": {
+      "all_users": {
+        "users": 22363,
+        "recall_at_10": 0.035907525569200516,
+        "ndcg_at_10": 0.018756700679659843
+      },
+      "without_boundary_ties": {
+        "users": 8003,
+        "recall_at_10": 0.026989879086613655,
+        "ndcg_at_10": 0.014473377726972103
+      },
+      "targets_unseen_in_training": 51
+    },
+    "parameter_count": 2217926,
+    "run_name": "bpr_f64_reg0.0001"
+  },
+  {
+    "model": "bpr",
+    "config": {
+      "num_users": 22363,
+      "num_items": 12101,
+      "factors": 64
+    },
+    "regularization": 0.001,
+    "selected_epoch": 19,
+    "stopped_epoch": 29,
+    "elapsed_seconds": 20.0817055410007,
+    "validation": {
+      "all_users": {
+        "users": 22363,
+        "recall_at_10": 0.03729374334216118,
+        "ndcg_at_10": 0.019379684701561928
+      },
+      "without_boundary_ties": {
+        "users": 8003,
+        "recall_at_10": 0.027614643797278404,
+        "ndcg_at_10": 0.014954582788050175
+      },
+      "targets_unseen_in_training": 51
+    },
+    "parameter_count": 2217926,
+    "run_name": "bpr_f64_reg0.001"
+  }
+]

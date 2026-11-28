@@ -1,0 +1,22 @@
+{
+  "manifest_sha256": "3ce6f8ad6b089575c54e22d0f4a897638e579aafdc702438c50cbc4e807999f7",
+  "model": "item_cf",
+  "metric": "jaccard",
+  "fit_seconds": 0.0693858329905197,
+  "validation_seconds": 0.7821504999883473,
+  "nonzero_similarities": 1668388,
+  "parameter_count": 0,
+  "validation": {
+    "all_users": {
+      "users": 22363,
+      "recall_at_10": 0.07221750169992447,
+      "ndcg_at_10": 0.042516518384218216
+    },
+    "without_boundary_ties": {
+      "users": 8003,
+      "recall_at_10": 0.046232663094997406,
+      "ndcg_at_10": 0.025039788335561752
+    },
+    "targets_unseen_in_training": 51
+  }
+}
